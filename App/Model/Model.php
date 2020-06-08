@@ -1,6 +1,6 @@
 <?php
 
-namespace Model;
+namespace App\Model;
 
 abstract class Model
 {
@@ -21,7 +21,7 @@ abstract class Model
 
     private function getConfig()
     {
-        return include(__DIR__ . '/../config.php');
+        return include(__DIR__ . '/../../config.php');
     }
 
     public function all()
@@ -60,5 +60,45 @@ abstract class Model
             }
         }
         return $token;
+    }
+
+    public function find($value, $by = 'id')
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE {$by} = ?";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([$value]);
+        return $stmt->fetch();
+    }
+
+    public function update($data, $condition)
+    {
+        // @todo update so condition can be multiple
+        $values = $this->getValues($data);
+        $where = $this->getValues($condition);
+        $sql = "UPDATE {$this->table} SET {$values} WHERE {$where}";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(
+            $this->getUpdateData($data, $condition)
+        );
+    }
+
+    private function getValues($data)
+    {
+        $values = "";
+        $data = array_keys($data);
+        for ($i = 0; $i < count($data); $i++) {
+            $values .= "{$data[$i]}=?";
+            if ($i !== count($data) - 1) {
+                $values .= ",";
+            }
+        }
+        return $values;
+    }
+
+    private function getUpdateData($data, $condition)
+    {
+        $update_data = array_values($data);
+        $update_data = array_merge($update_data, array_values($condition));
+        return $update_data;
     }
 }
