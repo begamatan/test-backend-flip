@@ -1,7 +1,7 @@
 # Disbursement service
 
 ## Note
-If your database did'nt allow `0000-00-00 00:00:00` for default timestamp value, the value will be current timestamp when record is created.
+My database did'nt allow `0000-00-00 00:00:00` for default timestamp value, the value will be current timestamp when record is created.
 
 ## Requirement
 - PHP (tested on PHP 7.4)
