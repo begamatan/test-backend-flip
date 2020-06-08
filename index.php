@@ -1,12 +1,13 @@
 <?php
-$config = require('./config.php');
-$db = $config['database'];
+require_once "./autoload.php";
+
+use Model\Disbursement;
 
 echo "Hello! What do you want me to do?\n";
 echo "1) Send disbursement\n";
 echo "2) Update disbursement status\n";
 echo "3) Get current disbursement status\n";
-echo "Please choose the task by typing the number (1/2)\n";
+echo "Please choose the task by typing the number (1/2/3)\n";
 $handle = fopen("php://stdin", "r");
 $task = fgets($handle);
 switch (trim($task)) {
@@ -44,43 +45,20 @@ switch (trim($task)) {
         $data = json_decode($response);
         echo "Disbursement request is sent. Your transaction id is {$data->id}.\n";
         echo "Saving response data to database...\n";
-        $sql = "INSERT INTO disbursement (
-                transaction_id,
-                amount,
-                status,
-                timestamp,
-                bank_code,
-                account_number,
-                beneficiary_name,
-                remark,
-                receipt,
-                time_served,
-                fee
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try {
-            $conn = new PDO("mysql:host={$db['host']};dbname={$db['db_name']}", $db['db_username'], $db['db_password']);
-            // set the PDO error mode to exception
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $stmt = $conn->prepare($sql);
-            $stmt->execute([
-                $data->id,
-                $data->amount,
-                $data->status,
-                $data->timestamp,
-                $data->bank_code,
-                $data->account_number,
-                $data->beneficiary_name,
-                $data->remark,
-                $data->receipt,
-                $data->time_served,
-                $data->fee
-            ]);
-            echo "Response data saved.\n";
-        } catch (PDOException $e) {
-            echo "Failed to save data to database: " . $e->getMessage() . "\n";
-            abort();
-        }
-
+        $disbursement = new Disbursement;
+        $disbursement->insert([
+            'transaction_id' => $data->id,
+            'amount' => $data->amount,
+            'status' => $data->status,
+            'timestamp' => $data->timestamp,
+            'bank_code' => $data->bank_code,
+            'account_number' => $data->account_number,
+            'beneficiary_name' => $data->beneficiary_name,
+            'remark' => $data->remark,
+            'receipt' => $data->receipt,
+            'time_served' => $data->time_served === '0000-00-00 00:00:00' ? null : $data->time_served,
+            'fee' => $data->fee
+        ]);
         break;
 
     case '2':

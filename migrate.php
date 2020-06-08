@@ -17,7 +17,7 @@ try {
             beneficiary_name VARCHAR(255) NOT NULL,
             remark VARCHAR(255) NOT NULL,
             receipt VARCHAR(255),
-            time_served TIMESTAMP,
+            time_served TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             fee DECIMAL(13,4) NOT NULL,
             PRIMARY KEY (id)
         )";
