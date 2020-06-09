@@ -86,11 +86,11 @@ class Flip
         if (php_sapi_name() === 'cli') {
             switch ($event_name) {
                 case 'save_record':
-                    echo "Saving response data to database...\n";
+                    echo "Saving response data to database..." . PHP_EOL;
                     break;
 
                 case 'set_status':
-                    echo "Updating transaction status...\n";
+                    echo "Updating transaction status..." . PHP_EOL;
 
                 default:
                     break;

@@ -21,9 +21,9 @@ try {
             fee DECIMAL(13,4) NOT NULL,
             PRIMARY KEY (id)
         )";
-    echo "Migrating table...\n";
+    echo "Migrating table..." . PHP_EOL;
     $conn->exec($sql);
-    echo "Table migrated.\n";
+    echo "Table migrated." . PHP_EOL;
 } catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage() . "\n";
+    echo "Connection failed: " . $e->getMessage() . "" . PHP_EOL;
 }
