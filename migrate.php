@@ -1,11 +1,7 @@
 <?php
-$config = require './config.php';
-$db = $config['database'];
+require_once './bootstrap.php';
 
 try {
-    $conn = new PDO("mysql:host={$db['host']};dbname={$db['db_name']}", $db['db_username'], $db['db_password']);
-    // set the PDO error mode to exception
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $sql = "CREATE TABLE IF NOT EXISTS disbursement (
             id BIGINT AUTO_INCREMENT,
             transaction_id BIGINT NOT NULL,
@@ -22,8 +18,9 @@ try {
             PRIMARY KEY (id)
         )";
     echo "Migrating table..." . PHP_EOL;
-    $conn->exec($sql);
+    $query = app()['connection']->prepare($sql);
+    $query->execute();
     echo "Table migrated." . PHP_EOL;
 } catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage() . "" . PHP_EOL;
+    die("Connection failed: " . $e->getMessage());
 }

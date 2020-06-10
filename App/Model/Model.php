@@ -8,20 +8,7 @@ abstract class Model
 
     public function __construct()
     {
-        $config = $this->getConfig()['database'];
-        try {
-            $this->connection = new \PDO("mysql:host={$config['host']};dbname={$config['db_name']}", $config['db_username'], $config['db_password']);
-            // set the PDO error mode to exception
-            $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-        } catch (\PDOException $e) {
-            echo "Connection failed: " . $e->getMessage() . "" . PHP_EOL;
-        }
-    }
-
-    private function getConfig()
-    {
-        return include(__DIR__ . '/../../config.php');
+        $this->connection = app()['connection'];
     }
 
     public function all()
@@ -34,8 +21,8 @@ abstract class Model
     public function insert($data)
     {
         $sql = $this->buildInsertQuery($data);
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute(array_values($data));
+        $query = $this->connection->prepare($sql);
+        $query->execute(array_values($data));
     }
 
     private function buildInsertQuery($data)
@@ -65,9 +52,9 @@ abstract class Model
     public function find($value, $by = 'id')
     {
         $sql = "SELECT * FROM {$this->table} WHERE {$by} = ?";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute([$value]);
-        return $stmt->fetch();
+        $query = $this->connection->prepare($sql);
+        $query->execute([$value]);
+        return $query->fetch();
     }
 
     public function update($data, $condition)
@@ -76,8 +63,8 @@ abstract class Model
         $values = $this->getValues($data);
         $where = $this->getValues($condition);
         $sql = "UPDATE {$this->table} SET {$values} WHERE {$where}";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute(
+        $query = $this->connection->prepare($sql);
+        $query->execute(
             $this->getUpdateData($data, $condition)
         );
     }
