@@ -2,8 +2,15 @@
 
 namespace App\Model;
 
+use PDO;
+
 abstract class Model
 {
+    /**
+     * PDO connection.
+     *
+     * @var PDO
+     */
     protected $connection;
 
     public function __construct()
@@ -11,21 +18,26 @@ abstract class Model
         $this->connection = app()['connection'];
     }
 
-    public function all()
-    {
-        return $this->connection
-            ->query("SELECT * FROM {$this->table}")
-            ->fetchAll();
-    }
-
-    public function insert($data)
+    /**
+     * Insert record to database.
+     *
+     * @param  array  $data  Data to insert
+     * @return void
+     */
+    public function insert(array $data): void
     {
         $sql = $this->buildInsertQuery($data);
         $query = $this->connection->prepare($sql);
         $query->execute(array_values($data));
     }
 
-    private function buildInsertQuery($data)
+    /**
+     * Build sql query for insertion.
+     *
+     * @param  array  $data
+     * @return string
+     */
+    private function buildInsertQuery(array $data): string
     {
         $key = implode(',', array_keys($data));
         $value = $this->getInsertToken($data);
@@ -37,7 +49,13 @@ abstract class Model
         return $sql;
     }
 
-    private function getInsertToken($data)
+    /**
+     * Put placeholder for sql statement.
+     *
+     * @param  array  $data
+     * @return string
+     */
+    private function getInsertToken(array $data): string
     {
         $token = '';
         for ($i = 0; $i < count($data); $i++) {
@@ -49,15 +67,30 @@ abstract class Model
         return $token;
     }
 
-    public function find($value, $by = 'id')
+    /**
+     * Find record in database.
+     *
+     * @param  string  $value
+     * @param  string  $by
+     * @return array
+     */
+    public function find(string $value, string $by = 'id'): array
     {
         $sql = "SELECT * FROM {$this->table} WHERE {$by} = ?";
         $query = $this->connection->prepare($sql);
         $query->execute([$value]);
-        return $query->fetch();
+        $result = $query->fetch();
+        return $result ? $result : [];
     }
 
-    public function update($data, $condition)
+    /**
+     * Update record in database.
+     *
+     * @param  array  $data
+     * @param  array  $condition
+     * @return void
+     */
+    public function update(array $data, array $condition): void
     {
         // @todo update so condition can be multiple
         $values = $this->getValues($data);
@@ -69,7 +102,13 @@ abstract class Model
         );
     }
 
-    private function getValues($data)
+    /**
+     * Build string from array of data for SQL query.
+     *
+     * @param  array  $data
+     * @return string
+     */
+    private function getValues(array $data): string
     {
         $values = "";
         $data = array_keys($data);
@@ -82,7 +121,14 @@ abstract class Model
         return $values;
     }
 
-    private function getUpdateData($data, $condition)
+    /**
+     * Build array of data to replace placeholder in SQL query.
+     *
+     * @param  array  $data
+     * @param  array  $condition
+     * @return array
+     */
+    private function getUpdateData(array $data, array $condition): array
     {
         $update_data = array_values($data);
         $update_data = array_merge($update_data, array_values($condition));

@@ -9,11 +9,21 @@ class GetStatus extends Command
 {
     const SUCCESS = 'SUCCESS';
 
-    protected $question = [
+    /**
+     * List of question to be prompted.
+     *
+     * @var array
+     */
+    protected array $question = [
         'transaction_id' => 'Please input your transaction id'
     ];
 
-    public function process()
+    /**
+     * Get transaction status.
+     *
+     * @return void
+     */
+    public function process(): void
     {
         $this->prompt('Please wait while we\'re getting your disbursement status...');
 
@@ -30,7 +40,12 @@ class GetStatus extends Command
         }
     }
 
-    protected function getStatus()
+    /**
+     * Get transaction status from API.
+     *
+     * @return void
+     */
+    protected function getStatus(): void
     {
         $flip = new Flip;
         $response = json_decode(
@@ -45,7 +60,13 @@ class GetStatus extends Command
         }
     }
 
-    protected function success($receipt)
+    /**
+     * Display receive and success message.
+     *
+     * @param  string  $receipt  Link to download receipt
+     * @return void
+     */
+    protected function success(string $receipt): void
     {
         $this->prompt(
             'Your disbursement request is successfully processed. Here\'s the receipt for transaction.'

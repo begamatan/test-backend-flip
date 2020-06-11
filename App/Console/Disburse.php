@@ -6,14 +6,24 @@ use App\Service\Flip;
 
 class Disburse extends Command
 {
-    protected $question = [
+    /**
+     * List of question to be prompted.
+     *
+     * @var array
+     */
+    protected array $question = [
         'bank_code' => 'Please input bank code',
         'account_number' => 'Please input bank account number',
         'amount' => 'Please input amount to disburse',
         'remark' => 'Please input remark'
     ];
 
-    public function process()
+    /**
+     * Send disbursement request and save to database.
+     *
+     * @return void
+     */
+    public function process(): void
     {
         $this->prompt('Sending disbursement request ...');
 
