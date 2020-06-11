@@ -10,7 +10,8 @@ My database did'nt allow `0000-00-00 00:00:00` for default timestamp value, the 
 - PHP Curl enabled
 
 ## Setup and Usage
-- Copy `config.php.example` as `config.php` file, if you're using linux/mac that have shell access, enter this project directory and run `cp config.php.example config.php`
+- Clone this project and enter cloned project directory
+- Copy `config.php.example` as `config.php` file, if you have shell access, run `cp config.php.example config.php`
 - You can configure your database credential and API secret key provided by `Slightly-big Flip` in `config.php` file
 - After that, you need to run `php migrate.php` to migrate table needed to use this service
-- Run `php index.php` to use the service, you will be prompted several question based on service you want to use.
+- Run `php app.php` to use the service, you will be prompted several question based on service you want to use.
