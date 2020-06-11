@@ -1,15 +1,14 @@
 <?php
-require_once "./bootstrap.php";
+require_once './bootstrap.php';
 
 use App\Console\Disburse;
 use App\Console\GetStatus;
 
-echo "Hello! What do you want me to do?" . PHP_EOL;
-echo "1) Send disbursement" . PHP_EOL;
-echo "2) Get disbursement status" . PHP_EOL;
-echo "Please choose the task by typing the number (1/2)" . PHP_EOL;
-$task = readline();
-switch (trim($task)) {
+echo 'Hello! What do you want me to do?' . PHP_EOL;
+echo '1) Send disbursement' . PHP_EOL;
+echo '2) Get disbursement status' . PHP_EOL;
+echo 'Please choose the task by typing the number (1/2)' . PHP_EOL;
+switch (trim(readline())) {
     case '1':
         (new Disburse)->start();
         break;
@@ -19,6 +18,6 @@ switch (trim($task)) {
         break;
 
     default:
-        echo 'Please try again and choose correct task' . PHP_EOL;
+        echo 'Task not found. Please try again and choose correct task' . PHP_EOL;
         break;
 }
