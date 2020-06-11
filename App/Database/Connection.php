@@ -7,7 +7,13 @@ use PDOException;
 
 class Connection
 {
-    public function start($config)
+    /**
+     * Connect to database.
+     *
+     * @param  array  $config  Database credential
+     * @return \PDO
+     */
+    public function start(array $config): PDO
     {
         try {
             $conn = new PDO(

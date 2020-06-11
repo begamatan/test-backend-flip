@@ -18,7 +18,7 @@ try {
             PRIMARY KEY (id)
         )";
     echo "Migrating table..." . PHP_EOL;
-    $query = app()['connection']->prepare($sql);
+    $query = app()["connection"]->prepare($sql);
     $query->execute();
     echo "Table migrated." . PHP_EOL;
 } catch (PDOException $e) {

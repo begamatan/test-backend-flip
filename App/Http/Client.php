@@ -4,17 +4,42 @@ namespace App\Http;
 
 class Client
 {
-    public function get($url, $payload = [], $headers = [])
+    /**
+     * Request GET with CURL.
+     *
+     * @param  string  $url  Url to request
+     * @param  array  $payload  Payload for request
+     * @param  array  $headers  Header for request
+     * @return string
+     */
+    public function get(string $url, array $payload = [], array $headers = []): string
     {
         return $this->curl('GET', $url, $payload, $headers);
     }
 
-    public function post($url, $payload = [], $headers = [])
+    /**
+     * Request POST with CURL.
+     *
+     * @param  string  $url  Url to request
+     * @param  array  $payload  Payload for request
+     * @param  array  $headers  Header for request
+     * @return string
+     */
+    public function post(string $url, array $payload = [], array $headers = []): string
     {
         return $this->curl('POST', $url, $payload, $headers);
     }
 
-    protected function curl($method, $url, $payload, $headers)
+    /**
+     * Request with CURL.
+     *
+     * @param  string  $method  Request method
+     * @param  string  $url  Url to request
+     * @param  array  $payload  Payload for request
+     * @param  array  $headers  Header for request
+     * @return string
+     */
+    protected function curl(string $method, string $url, array $payload, array $headers): string
     {
         $curl = curl_init();
 
@@ -43,7 +68,14 @@ class Client
         return $response;
     }
 
-    protected function getHeader($method, $headers)
+    /**
+     * Get header for request.
+     *
+     * @param  string  $method  Request method
+     * @param  array  $headers  Header for request
+     * @return array
+     */
+    protected function getHeader(string $method, array $headers): array
     {
         $curl_headers = [];
         foreach ($headers as $header => $value) {
